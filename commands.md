@@ -1,46 +1,49 @@
-# Command-line commands
+# 命令行命令
 
-This is a list of all command-line commands used in the book. It includes
-installation and other shell-based commands used to try out things or
-run scripts manually.
+这是这本书中用到的命令行命令。包括安装和其他的shell命令。你可以试试或者手动运行脚本。
 
-## Chapter 2: Hello World
 
-### Project Set Up
+## 第2章: Hello World
+
+### 安装nvm
 
 ```
-nvm install 10
-nvm alias default 10
-node --version
-npm --version
-npm install -g npm@6
+https://github.com/creationix/nvm
+
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+```
+
+### 安装node
+```
+nvm install --lts   #安装最新长期支持版
+
+```
+
+### 项目设置
+```
 npm init
-npm install express
-npm uninstall express
-npm install express@4
-npm install nodemon@1
+npm [un]install [--save[-dev]] express babel-cli babel-preset-react babel-preset-es2015
 ```
 
 ### Express
 ```
-node server.js
 npm start
 ```
 
-### JSX Transform
+### Jsx编译
 ```
-npm install --save-dev @babel/core@7 @babel/cli@7
-node_modules/.bin/babel --version
-npx babel --version
-npm install --save-dev @babel/preset-react@7
-npx babel src --presets @babel/react --out-dir public
-```
+node_modules/.bin/babel src --presets react --out-dir static
+package.json
+...
+	"scripts":{
+		"compile":"babel src --presets react,es2015 --out-dir static"
+		"watch":"babel src --presets react,es2015 --out-dir static --watch"
+		"test":"echo \"Error: no test specified\" && exit 1"
+	}
 
-### Older Browsers Support
-```
-npm install --no-save @babel/plugin-transform-arrow-functions@7
-npx babel src --presets @babel/react --plugins=@babel/plugin-transform-arrow-functions --out-dir public
-npm uninstall @babel/plugin-transform-arrow-functions@7
-npm install --save-dev @babel/preset-env
-npx babel src --out-dir public
+...
+index.html
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.13.0/polyfill.js"></script>
+
+npm run watch
 ```
