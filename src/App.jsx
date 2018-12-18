@@ -34,9 +34,9 @@ class IssueTable extends React.Component{
 					</tr>
 				</thead>
 				<tbody>
-					<IssueRow issue_id={1} issue_title="this is first issue row." />
-					<IssueRow issue_id={2} issue_title="this is 2 issue row." />
-					<IssueRow issue_id={3} />
+					<IssueRow issue_id={1}>this is 1 issue row.</IssueRow>
+					<IssueRow issue_id={2}>this is 2 issue row.</IssueRow>
+					<IssueRow>this is 3 issue row.</IssueRow>
 				</tbody>
 			</table>
 		)
@@ -50,7 +50,7 @@ class IssueRow extends React.Component{
 		return(
 			<tr>
 				<td style={borderedStyle}>{this.props.issue_id}</td>
-				<td style={borderedStyle}>{this.props.issue_title}</td>
+				<td style={borderedStyle}>{this.props.children}</td>
 			</tr>
 		)
 	}
