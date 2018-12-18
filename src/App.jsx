@@ -23,7 +23,7 @@ class IssueFilter extends React.Component{
 
 class IssueTable extends React.Component{
 	render(){
-		const issueRows = this.props.issues.map(issue => <IssueRow key={issue.id} issue={issue} />);
+		const issueRows = this.props.issues.map(issue => <IssueRow key={issue.id} issue={issue} completion_date={issue.completionDate}>{issue.title}</IssueRow>);
 
 		return (
 			<table className="bordered-table">
@@ -54,23 +54,21 @@ class IssueRow extends React.Component{
 				<td>{issue.owner}</td>
 				<td>{issue.created.toDateString()}</td>
 				<td>{issue.effort}</td>
-				<td>{issue.completionDate ? issue.completionDate.toDateString():""}</td>
-				<td>{issue.title}</td>
+				<td>{this.props.completion_date}</td>
+				<td>{this.props.children}</td>
 			</tr>
 		)
 	}
 
 	static get propTypes(){
 		return {
-			issue_id:React.PropTypes.number.isRequired,
-			issue_title:React.PropTypes.string
+			completion_date:React.PropTypes.string
 		};
 	}
 
 	static get defaultProps(){
 		return {
-			issue_id:"-----no id------",
-			issue_title:"-----no title------"
+			completion_date:"-----no completion date------"
 		};
 	}
 }
@@ -101,7 +99,7 @@ const issues = [
 		"owner":"woogle",
 		"created":new Date("2018-12-18"),
 		"effort":5,
-		"completionDate":new Date("2018-12-18"),
+		"completionDate":"2018-12-18",
 		"title":"this is the title of issue 2"
 	},
 	{
@@ -110,8 +108,7 @@ const issues = [
 		"owner":"woogle",
 		"created":new Date("2018-12-17"),
 		"effort":5,
-		"completionDate":new Date("2018-12-18"),
-		"title":"this is the title of issue 2"
+		"title":"this is the title of issue 3"
 	}
 ];
 
