@@ -5,7 +5,7 @@ class IssueList extends React.Component{
 				<h1>Issue Tracker</h1>
 				<IssueFilter />
 				<hr />
-				<IssueTable />
+				<IssueTable issues={issues} />
 				<hr />
 				<IssueAdd />
 			</div>
@@ -23,21 +23,22 @@ class IssueFilter extends React.Component{
 
 class IssueTable extends React.Component{
 	render(){
-		const borderedStyle = {border:"1px solid silver",padding:6};
+		const issueRows = this.props.issues.map(issue => <IssueRow key={issue.id} issue={issue} />);
 
 		return (
-			<table style={{borderCollapse:"collapse"}}>
+			<table className="bordered-table">
 				<thead>
 					<tr>
-						<th style={borderedStyle}>ID</th>
-						<th style={borderedStyle}>Title</th>
+						<th>ID</th>
+						<th>Status</th>
+						<th>Owner</th>
+						<th>Created</th>
+						<th>Effort</th>
+						<th>Completion Date</th>
+						<th>Title</th>
 					</tr>
 				</thead>
-				<tbody>
-					<IssueRow issue_id={1}>this is 1 issue row.</IssueRow>
-					<IssueRow issue_id={2}>this is 2 issue row.</IssueRow>
-					<IssueRow>this is 3 issue row.</IssueRow>
-				</tbody>
+				<tbody>{issueRows}</tbody>
 			</table>
 		)
 	}
@@ -45,12 +46,16 @@ class IssueTable extends React.Component{
 
 class IssueRow extends React.Component{
 	render(){
-		const borderedStyle = {border:"1px solid silver", padding:4};
-
+		const issue = this.props.issue;
 		return(
 			<tr>
-				<td style={borderedStyle}>{this.props.issue_id}</td>
-				<td style={borderedStyle}>{this.props.children}</td>
+				<td>{issue.id}</td>
+				<td>{issue.status}</td>
+				<td>{issue.owner}</td>
+				<td>{issue.created.toDateString()}</td>
+				<td>{issue.effort}</td>
+				<td>{issue.completionDate ? issue.completionDate.toDateString():""}</td>
+				<td>{issue.title}</td>
 			</tr>
 		)
 	}
@@ -79,5 +84,35 @@ class IssueAdd extends React.Component{
 }
 
 const contentNode = document.getElementById("contents");
+
+const issues = [
+	{
+		"id":1,
+		"status":"open",
+		"owner":"woogle",
+		"created":new Date("2018-12-19"),
+		"effort":5,
+		"completionDate":undefined,
+		"title":"this is the title of issue 1"
+	},
+	{
+		"id":2,
+		"status":"open",
+		"owner":"woogle",
+		"created":new Date("2018-12-18"),
+		"effort":5,
+		"completionDate":new Date("2018-12-18"),
+		"title":"this is the title of issue 2"
+	},
+	{
+		"id":3,
+		"status":"open",
+		"owner":"woogle",
+		"created":new Date("2018-12-17"),
+		"effort":5,
+		"completionDate":new Date("2018-12-18"),
+		"title":"this is the title of issue 2"
+	}
+];
 
 ReactDOM.render(<IssueList />, contentNode);
