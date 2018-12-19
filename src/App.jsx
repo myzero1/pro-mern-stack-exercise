@@ -1,11 +1,46 @@
 class IssueList extends React.Component{
+	constructor(){
+		super();
+		this.state = {issues:[]};
+		this.createTestIssue = this.createTestIssue.bind(this)
+		setTimeout(this.createTestIssue.bind(this), 2000);
+	}
+
+	componentDidMount(){
+		this.loadData();
+	}
+
+	loadData(){
+		setTimeout(() => {
+			this.setState({issues:issues});
+		}, 500)
+	}
+
+	createIssue(newIssue){
+		const newIssues = this.state.issues.slice();
+		newIssues.id = this.state.issues.length + 1;
+		newIssues.push(newIssue);
+		this.setState({issues:newIssues});
+	}
+
+	createTestIssue(){
+		this.createIssue({
+			"id":Date.parse(new Date()),
+			"status":"New",
+			"owner":"woogle",
+			"created":new Date(),
+			"title":"add new issue",
+		});
+	}
+
 	render(){
 		return(
 			<div>
 				<h1>Issue Tracker</h1>
 				<IssueFilter />
 				<hr />
-				<IssueTable issues={issues} />
+				<IssueTable issues={this.state.issues} />
+				<button onClick={this.createTestIssue}>Add</button>
 				<hr />
 				<IssueAdd />
 			</div>
@@ -74,9 +109,33 @@ class IssueRow extends React.Component{
 }
 
 class IssueAdd extends React.Component{
+	constructor(){
+		super();
+		this.handleSubmit = this.handleSubmit.bind(this);
+	}
+
+	handleSubmit(e){
+		e.preventDefault();
+		var form = document.forms.issueAdd;
+		this.props.createIssue({
+			"owner":form.owner.value,
+			"title":form.title.value,
+			"status":"New",
+			"created":new Date()
+		});
+		form.owner.value="";
+		form.title.value="";
+	}
+
 	render(){
 		return (
-			<div>This is a placehoder for issue add.</div>
+			<div>
+				<form name="issueAdd" onSubmit={this.handleSubmit}>	
+					<input type="text" name="owner" placeholder="owner" />
+					<input type="text" name="title" placeholder="title" />
+					<button>Add</button>
+				</form>
+			</div>
 		)
 	}
 }
