@@ -44,7 +44,7 @@ class IssueFilter extends React.Component{
 	}
 }
 
-class IssueTable extends React.Component{
+class IssueTableOld extends React.Component{
 	render(){
 		const issueRows = this.props.issues.map(issue => <IssueRow key={issue.id} issue={issue} completion_date={issue.completionDate}>{issue.title}</IssueRow>);
 
@@ -67,7 +67,28 @@ class IssueTable extends React.Component{
 	}
 }
 
-class IssueRow extends React.Component{
+function IssueTable(props){
+	const issueRows = props.issues.map(issue => <IssueRow key={issue.id} issue={issue}>{issue.title}</IssueRow>);
+
+	return (
+		<table className="bordered-table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Status</th>
+					<th>Owner</th>
+					<th>Created</th>
+					<th>Effort</th>
+					<th>Completion Date</th>
+					<th>Title</th>
+				</tr>
+			</thead>
+			<tbody>{issueRows}</tbody>
+		</table>
+	)
+}
+
+class IssueRowOld extends React.Component{
 	render(){
 		const issue = this.props.issue;
 		return(
@@ -96,6 +117,18 @@ class IssueRow extends React.Component{
 	}
 }
 
+const IssueRow = (props) => (
+		<tr>
+			<td>{props.issue.id}</td>
+			<td>{props.issue.status}</td>
+			<td>{props.issue.owner}</td>
+			<td>{props.issue.created.toDateString()}</td>
+			<td>{props.issue.effort}</td>
+			<td>{props.issue.completionDate}</td>
+			<td>{props.children}</td>
+		</tr>
+	);
+
 class IssueAdd extends React.Component{
 	constructor(){
 		super();
@@ -106,7 +139,7 @@ class IssueAdd extends React.Component{
 		e.preventDefault();
 		var form = document.forms.issueAdd;
 		this.props.createIssue({
-			"id":Date.parse(new Date()),
+			"id":new Date().getTime(),
 			"owner":form.owner.value,
 			"title":form.title.value,
 			"status":"New",
