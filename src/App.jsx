@@ -2,8 +2,7 @@ class IssueList extends React.Component{
 	constructor(){
 		super();
 		this.state = {issues:[]};
-		this.createTestIssue = this.createTestIssue.bind(this)
-		setTimeout(this.createTestIssue.bind(this), 2000);
+		this.createIssue = this.createIssue.bind(this);
 	}
 
 	componentDidMount(){
@@ -23,16 +22,6 @@ class IssueList extends React.Component{
 		this.setState({issues:newIssues});
 	}
 
-	createTestIssue(){
-		this.createIssue({
-			"id":Date.parse(new Date()),
-			"status":"New",
-			"owner":"woogle",
-			"created":new Date(),
-			"title":"add new issue",
-		});
-	}
-
 	render(){
 		return(
 			<div>
@@ -40,9 +29,8 @@ class IssueList extends React.Component{
 				<IssueFilter />
 				<hr />
 				<IssueTable issues={this.state.issues} />
-				<button onClick={this.createTestIssue}>Add</button>
 				<hr />
-				<IssueAdd />
+				<IssueAdd createIssue={this.createIssue} />
 			</div>
 		)
 	}
@@ -118,6 +106,7 @@ class IssueAdd extends React.Component{
 		e.preventDefault();
 		var form = document.forms.issueAdd;
 		this.props.createIssue({
+			"id":Date.parse(new Date()),
 			"owner":form.owner.value,
 			"title":form.title.value,
 			"status":"New",
