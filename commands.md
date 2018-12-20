@@ -47,3 +47,9 @@ index.html
 
 npm run watch
 ```
+
+### Express restfull api
+```
+npm install --save-dev nodemon
+npm install --save body-parser
+```
