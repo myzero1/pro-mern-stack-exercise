@@ -31,6 +31,14 @@ const issues = [
 		"created":new Date("2018-12-17"),
 		"effort":5,
 		"title":"this is the title of issue 3"
+	},
+	{
+		"id":4,
+		"status":"open",
+		"owner":"woogle",
+		"created":new Date("2018-12-17"),
+		"effort":5,
+		"title":"this is the title of issue 3"
 	}
 ];
 

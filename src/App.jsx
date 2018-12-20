@@ -10,16 +10,47 @@ class IssueList extends React.Component{
 	}
 
 	loadData(){
-		setTimeout(() => {
-			this.setState({issues:issues});
-		}, 500)
+		fetch('/api/issues').then(response =>response.json()).then(data=>{
+			data.records.forEach(issue => {
+				issue.created = new Date(issue.created);
+				if(issue.completionDate){
+					issue.completionDate = new Date(issue.completionDate);
+				}
+			});
+			this.setState({issues:data.records});
+		}).catch(err=>{
+			console.log(err);
+		});
 	}
 
 	createIssue(newIssue){
+		/*
 		const newIssues = this.state.issues.slice();
 		newIssues.id = this.state.issues.length + 1;
 		newIssues.push(newIssue);
 		this.setState({issues:newIssues});
+		*/
+
+		fetch('/api/issues',{
+			method:'Post',
+			headers:{'Content-Type':'application/json'},
+			body:JSON.stringify(newIssue)
+		}).then(
+			response => response.json()
+		).then(
+			updatedIssue => {
+				newIssue.created = new Date(newIssue.cteated);
+				if(newIssue.completionDate){
+					newIssue.completionDate = new Date(newIssue.completionDate);
+				}
+				const newIssues = this.state.issues.concat(newIssue);
+				this.setState({issues:newIssues});
+			}
+		).catch(
+			err=>{
+				console.log(err);
+			}
+		);
 	}
 
 	render(){
@@ -124,7 +155,7 @@ const IssueRow = (props) => (
 			<td>{props.issue.owner}</td>
 			<td>{props.issue.created.toDateString()}</td>
 			<td>{props.issue.effort}</td>
-			<td>{props.issue.completionDate}</td>
+			<td>{props.issue.completionDate ? props.issue.completionDate.toDateString() : ''}</td>
 			<td>{props.children}</td>
 		</tr>
 	);
