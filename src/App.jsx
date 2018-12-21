@@ -10,41 +10,49 @@ class IssueList extends React.Component{
 	}
 
 	loadData(){
-		fetch('/api/issues').then(response =>response.json()).then(data=>{
-			data.records.forEach(issue => {
-				issue.created = new Date(issue.created);
-				if(issue.completionDate){
-					issue.completionDate = new Date(issue.completionDate);
-				}
-			});
-			this.setState({issues:data.records});
+		fetch('/api/issues').then(response => {
+			if(response.ok){
+				response.json().then(data=>{
+					data.records.forEach(issue => {
+						issue.created = new Date(issue.created);
+						if(issue.completionDate){
+							issue.completionDate = new Date(issue.completionDate);
+						}
+					});
+					this.setState({issues:data.records});
+				});
+			} else{
+				response.json().then(error=>{
+					alert("Failed to fetch issues:" + error.message);
+				});
+			}
 		}).catch(err=>{
 			console.log(err);
 		});
 	}
 
-	createIssue(newIssue){
-		/*
-		const newIssues = this.state.issues.slice();
-		newIssues.id = this.state.issues.length + 1;
-		newIssues.push(newIssue);
-		this.setState({issues:newIssues});
-		*/
-
-		fetch('/api/issues',{
-			method:'Post',
-			headers:{'Content-Type':'application/json'},
-			body:JSON.stringify(newIssue)
-		}).then(
-			response => response.json()
-		).then(
-			updatedIssue => {
-				newIssue.created = new Date(newIssue.cteated);
-				if(newIssue.completionDate){
-					newIssue.completionDate = new Date(newIssue.completionDate);
+  createIssue(newIssue) {
+    fetch('/api/issues', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newIssue),
+    }).then(response => {
+      if (response.ok) {
+        response.json().then(updatedIssue => {
+        				console.log('---------',JSON.stringify(updatedIssue),'---------');
+        				console.log('---------',updatedIssue,'---------');
+						updatedIssue.created = new Date(updatedIssue.created);
+						if(updatedIssue.completionDate){
+							updatedIssue.completionDate = new Date(updatedIssue.completionDate);
+						}
+						const newIssues = this.state.issues.concat(updatedIssue);
+						this.setState({issues:newIssues});
+					});
+				} else{
+					response.json().then(error=>{
+						alert("Failed to fetch issues:" + error.message);
+					});
 				}
-				const newIssues = this.state.issues.concat(newIssue);
-				this.setState({issues:newIssues});
 			}
 		).catch(
 			err=>{
@@ -99,7 +107,7 @@ class IssueTableOld extends React.Component{
 }
 
 function IssueTable(props){
-	const issueRows = props.issues.map(issue => <IssueRow key={issue.id} issue={issue}>{issue.title}</IssueRow>);
+	const issueRows = props.issues.map(issue => <IssueRow key={issue._id} issue={issue}>{issue.title}</IssueRow>);
 
 	return (
 		<table className="bordered-table">
@@ -150,7 +158,7 @@ class IssueRowOld extends React.Component{
 
 const IssueRow = (props) => (
 		<tr>
-			<td>{props.issue.id}</td>
+			<td>{props.issue._id}</td>
 			<td>{props.issue.status}</td>
 			<td>{props.issue.owner}</td>
 			<td>{props.issue.created.toDateString()}</td>
@@ -194,34 +202,5 @@ class IssueAdd extends React.Component{
 }
 
 const contentNode = document.getElementById("contents");
-
-const issues = [
-	{
-		"id":1,
-		"status":"open",
-		"owner":"woogle",
-		"created":new Date("2018-12-19"),
-		"effort":5,
-		"completionDate":undefined,
-		"title":"this is the title of issue 1"
-	},
-	{
-		"id":2,
-		"status":"open",
-		"owner":"woogle",
-		"created":new Date("2018-12-18"),
-		"effort":5,
-		"completionDate":"2018-12-18",
-		"title":"this is the title of issue 2"
-	},
-	{
-		"id":3,
-		"status":"open",
-		"owner":"woogle",
-		"created":new Date("2018-12-17"),
-		"effort":5,
-		"title":"this is the title of issue 3"
-	}
-];
 
 ReactDOM.render(<IssueList />, contentNode);
